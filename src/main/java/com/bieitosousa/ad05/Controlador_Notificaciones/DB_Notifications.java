@@ -79,12 +79,29 @@ public class DB_Notifications extends Thread {
 
     }
 
+       public DB_Notifications(String ruta ) {
+           
+        if (driver.sqlFunccion(sqlFunccion)) {
+            System.out.println(" SQLFunccion [CORRECTA]");
+        } else {
+            System.out.println(" SQLFunccion [ERROR]");
+        }
+        if (driver.sqlTrigger(sqlTrigger)) {
+            System.out.println(" SQLTRIGGER [CORRECTA]");
+
+        } else {
+            System.out.println(" SQLTRIGGER [ERROR]");
+        }
+        openChanel();
+
+    }
+    
     private void openChanel() {
         try {
             pgconn = driver.getConn().unwrap(PGConnection.class);
             Statement stmt = driver.getConn().createStatement();
 
-            stmt.execute("LISTEN novamensaxe");
+            stmt.execute("LISTEN nuevofichero");
             stmt.close();
             System.out.println("Esperando mensaxes...");
 
