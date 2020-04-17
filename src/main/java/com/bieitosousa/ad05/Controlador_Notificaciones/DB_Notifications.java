@@ -49,16 +49,16 @@ public class DB_Notifications extends Thread {
             = "CREATE OR REPLACE FUNCTION notificar_mensaxe() "
             + "RETURNS trigger AS $$ "
             + "BEGIN "
-            + "PERFORM pg_notify('nuevofichero',NEW.id::text); "
+            + "PERFORM pg_notify('nuevofichero',NEW.MyFile_Hibernate_id::text); "
             + "RETURN NEW; "
             + "END; "
             + "$$ LANGUAGE plpgsql;";
 
     private String sqlTrigger
-            = "DROP TRIGGER IF EXISTS notif_nuevo_fichero ON files; "
+            = "DROP TRIGGER IF EXISTS notif_nuevo_fichero ON MyFile__Hibernate; "
             + "CREATE TRIGGER notif_nuevo_fichero "
             + "AFTER INSERT "
-            + "ON files "
+            + "ON MyFile__Hibernate "
             + "FOR EACH ROW "
             + "EXECUTE PROCEDURE notificar_mensaxe(); ";
 
@@ -81,7 +81,7 @@ public class DB_Notifications extends Thread {
 
     private void openChanel() {
         try {
-            PGConnection pgconn = driver.getConn().unwrap(PGConnection.class);
+            pgconn = driver.getConn().unwrap(PGConnection.class);
             Statement stmt = driver.getConn().createStatement();
 
             stmt.execute("LISTEN novamensaxe");
@@ -100,7 +100,10 @@ public class DB_Notifications extends Thread {
             while (true) {
                 PGNotification notifications[] = pgconn.getNotifications();
                 if (notifications != null) {
+                    System.out.println("hay notificaciones ... ");
                     for (int i = 0; i < notifications.length; i++) {
+                     int id =  Integer.parseInt(notifications[i].getParameter());
+                        System.out.println("recivido el id = ["+id+"]");
                         MyDirectori_Hibernate dh = null;
                         MyFile_Hibernate fh = null;
                         if ((fh = (HibernateUtil.getInstance()
