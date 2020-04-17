@@ -1,0 +1,19 @@
+{
+    "dbConnection":{
+        "address":"192.168.56.102",
+		"port":"5432",
+        "name":"minidrive",
+		"timezone":"?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC",
+        "user":"accesodatos",
+        "password":"abc123."    
+    },
+	   "hibernate":{
+        "driver":"org.postgresql.Driver",
+        "dialect":"org.hibernate.dialect.PostgreSQL10Dialect",
+        "HBM2DDL_AUTO":"update",
+        "SHOW_SQL": true
+    },
+    "app":{
+        "directory":"raiz_mapear"
+    }
+}

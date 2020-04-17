@@ -1,0 +1,170 @@
+cd J:\01_proyectos\java\00_DAM_Entregas\AD05; "JAVA_HOME=C:\\Program Files\\Java\\jdk1.8.0_241" cmd /c "\"C:\\Program Files\\NetBeans-11.3\\netbeans\\java\\maven\\bin\\mvn.cmd\" -Dexec.args=\"-classpath %classpath com.bieitosousa.ad05.Hibernate.Mapear_Hibernate\" -Dexec.executable=\"C:\\Program Files\\Java\\jdk1.8.0_241\\bin\\java.exe\" -Dexec.classpathScope=runtime -Dmaven.ext.class.path=\"C:\\Program Files\\NetBeans-11.3\\netbeans\\java\\maven-nblib\\netbeans-eventspy.jar\" -Dfile.encoding=UTF-8 org.codehaus.mojo:exec-maven-plugin:1.5.0:exec"
+Running NetBeans Compile On Save execution. Phase execution is skipped and output directories of dependency projects (with Compile on Save turned on) will be used instead of their jar artifacts.
+Scanning for projects...
+                                                                        
+------------------------------------------------------------------------
+Building AD05 1.0-SNAPSHOT
+------------------------------------------------------------------------
+
+--- exec-maven-plugin:1.5.0:exec (default-cli) @ AD05 ---
+abr 15, 2020 1:06:27 AM org.hibernate.Version logVersion
+INFO: HHH000412: Hibernate ORM core version 5.4.13.Final
+mirando la configuracion
+extrallendo configuracion
+mostrando objeto auxiliar
+ConfigDB{dbConnection=DbConnection{address=192.168.56.102, port=5432, name=minidrive, timezone=?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC, user=accesodatos, password=abc123.}, hibernate=Hibernate{driver=org.postgresql.Driver, dialect=org.hibernate.dialect.PostgreSQL10Dialect, HBM2DDL_AUTO=update, SHOW_SQL=true}, app=App{directory=raiz_mapear}}
+abr 15, 2020 1:06:27 AM org.hibernate.annotations.common.reflection.java.JavaReflectionManager <clinit>
+INFO: HCANN000001: Hibernate Commons Annotations {5.1.0.Final}
+abr 15, 2020 1:06:28 AM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl configure
+WARN: HHH10001002: Using Hibernate built-in connection pool (not for production use!)
+abr 15, 2020 1:06:28 AM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl buildCreator
+INFO: HHH10001005: using driver [org.postgresql.Driver] at URL [jdbc:postgresql://192.168.56.102:5432/minidrive?useUnicode=true&useJDBCCompliantTimezoneShift=true&useLegacyDatetimeCode=false&serverTimezone=UTC]
+abr 15, 2020 1:06:28 AM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl buildCreator
+INFO: HHH10001001: Connection properties: {user=accesodatos, password=****}
+abr 15, 2020 1:06:28 AM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl buildCreator
+INFO: HHH10001003: Autocommit mode: false
+abr 15, 2020 1:06:28 AM org.hibernate.engine.jdbc.connections.internal.DriverManagerConnectionProviderImpl$PooledConnections <init>
+INFO: HHH000115: Hibernate connection pool size: 20 (min=1)
+abr 15, 2020 1:06:28 AM org.hibernate.dialect.Dialect <init>
+INFO: HHH000400: Using dialect: org.hibernate.dialect.PostgreSQL10Dialect
+abr 15, 2020 1:06:29 AM org.hibernate.resource.transaction.backend.jdbc.internal.DdlTransactionIsolatorNonJtaImpl getIsolatedConnection
+INFO: HHH10001501: Connection obtained from JdbcConnectionAccess [org.hibernate.engine.jdbc.env.internal.JdbcEnvironmentInitiator$ConnectionProviderJdbcConnectionAccess@6b7d1df8] for (non-JTA) DDL execution was not in auto-commit mode; the Connection 'local transaction' will be committed and the Connection will be set into auto-commit mode.
+Hibernate: create table MyDirectori__Hibernate (MyDirectori__Hibernatee_id int4 not null, MyDirectori__Hibernatee_name varchar(255) not null, MyDirectori__Hibernate_url varchar(255) not null, primary key (MyDirectori__Hibernatee_id))
+Hibernate: create table MyFile__Hibernate (MyFile_Hibernate_id int4 not null, MyFile_Hibernate_datos bytea not null, MyFile_Hibernate_name varchar(255) not null, MyDirectori__Hibernatee_id int4, primary key (MyFile_Hibernate_id))
+Hibernate: alter table if exists MyFile__Hibernate add constraint FKp6rgw7r0b4w37v50pg84785wp foreign key (MyDirectori__Hibernatee_id) references MyDirectori__Hibernate
+abr 15, 2020 1:06:29 AM org.hibernate.engine.transaction.jta.platform.internal.JtaPlatformInitiator initiateService
+INFO: HHH000490: Using JtaPlatform implementation: [org.hibernate.engine.transaction.jta.platform.internal.NoJtaPlatform]
+Hibernate: select mydirector0_.MyDirectori__Hibernatee_id as mydirect1_0_, mydirector0_.MyDirectori__Hibernatee_name as mydirect2_0_, mydirector0_.MyDirectori__Hibernate_url as mydirect3_0_ from MyDirectori__Hibernate mydirector0_
+     START::::::::::::::     DB      ::::::::::
+           :::::::::Directorio:::::::::::::
+           :::::::::Archivo::::::::::::::::
+     FIN:::::::::    DB         ::::::::::
+   ANALIZANDO DIRECTORIO [raiz_mapear]
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyDirectori__Hibernate (MyDirectori__Hibernatee_name, MyDirectori__Hibernate_url, MyDirectori__Hibernatee_id) values (?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyFile__Hibernate (MyFile_Hibernate_datos, MyDirectori__Hibernatee_id, MyFile_Hibernate_name, MyFile_Hibernate_id) values (?, ?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyFile__Hibernate (MyFile_Hibernate_datos, MyDirectori__Hibernatee_id, MyFile_Hibernate_name, MyFile_Hibernate_id) values (?, ?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyFile__Hibernate (MyFile_Hibernate_datos, MyDirectori__Hibernatee_id, MyFile_Hibernate_name, MyFile_Hibernate_id) values (?, ?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyFile__Hibernate (MyFile_Hibernate_datos, MyDirectori__Hibernatee_id, MyFile_Hibernate_name, MyFile_Hibernate_id) values (?, ?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyFile__Hibernate (MyFile_Hibernate_datos, MyDirectori__Hibernatee_id, MyFile_Hibernate_name, MyFile_Hibernate_id) values (?, ?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyFile__Hibernate (MyFile_Hibernate_datos, MyDirectori__Hibernatee_id, MyFile_Hibernate_name, MyFile_Hibernate_id) values (?, ?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyFile__Hibernate (MyFile_Hibernate_datos, MyDirectori__Hibernatee_id, MyFile_Hibernate_name, MyFile_Hibernate_id) values (?, ?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyDirectori__Hibernate (MyDirectori__Hibernatee_name, MyDirectori__Hibernate_url, MyDirectori__Hibernatee_id) values (?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyFile__Hibernate (MyFile_Hibernate_datos, MyDirectori__Hibernatee_id, MyFile_Hibernate_name, MyFile_Hibernate_id) values (?, ?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyFile__Hibernate (MyFile_Hibernate_datos, MyDirectori__Hibernatee_id, MyFile_Hibernate_name, MyFile_Hibernate_id) values (?, ?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyFile__Hibernate (MyFile_Hibernate_datos, MyDirectori__Hibernatee_id, MyFile_Hibernate_name, MyFile_Hibernate_id) values (?, ?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyFile__Hibernate (MyFile_Hibernate_datos, MyDirectori__Hibernatee_id, MyFile_Hibernate_name, MyFile_Hibernate_id) values (?, ?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyDirectori__Hibernate (MyDirectori__Hibernatee_name, MyDirectori__Hibernate_url, MyDirectori__Hibernatee_id) values (?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyFile__Hibernate (MyFile_Hibernate_datos, MyDirectori__Hibernatee_id, MyFile_Hibernate_name, MyFile_Hibernate_id) values (?, ?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyFile__Hibernate (MyFile_Hibernate_datos, MyDirectori__Hibernatee_id, MyFile_Hibernate_name, MyFile_Hibernate_id) values (?, ?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyFile__Hibernate (MyFile_Hibernate_datos, MyDirectori__Hibernatee_id, MyFile_Hibernate_name, MyFile_Hibernate_id) values (?, ?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyFile__Hibernate (MyFile_Hibernate_datos, MyDirectori__Hibernatee_id, MyFile_Hibernate_name, MyFile_Hibernate_id) values (?, ?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyFile__Hibernate (MyFile_Hibernate_datos, MyDirectori__Hibernatee_id, MyFile_Hibernate_name, MyFile_Hibernate_id) values (?, ?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyFile__Hibernate (MyFile_Hibernate_datos, MyDirectori__Hibernatee_id, MyFile_Hibernate_name, MyFile_Hibernate_id) values (?, ?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyFile__Hibernate (MyFile_Hibernate_datos, MyDirectori__Hibernatee_id, MyFile_Hibernate_name, MyFile_Hibernate_id) values (?, ?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyDirectori__Hibernate (MyDirectori__Hibernatee_name, MyDirectori__Hibernate_url, MyDirectori__Hibernatee_id) values (?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyFile__Hibernate (MyFile_Hibernate_datos, MyDirectori__Hibernatee_id, MyFile_Hibernate_name, MyFile_Hibernate_id) values (?, ?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyFile__Hibernate (MyFile_Hibernate_datos, MyDirectori__Hibernatee_id, MyFile_Hibernate_name, MyFile_Hibernate_id) values (?, ?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyFile__Hibernate (MyFile_Hibernate_datos, MyDirectori__Hibernatee_id, MyFile_Hibernate_name, MyFile_Hibernate_id) values (?, ?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyFile__Hibernate (MyFile_Hibernate_datos, MyDirectori__Hibernatee_id, MyFile_Hibernate_name, MyFile_Hibernate_id) values (?, ?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Hibernate: select nextval ('hibernate_sequence')
+Hibernate: insert into MyFile__Hibernate (MyFile_Hibernate_datos, MyDirectori__Hibernatee_id, MyFile_Hibernate_name, MyFile_Hibernate_id) values (?, ?, ?, ?)
+ DB [NEW]  DIR [NEW]  Estado [Nuevo] 
+Exception in thread "main" java.lang.NullPointerException
+	at com.bieitosousa.ad05.Hibernate.Mapear_Hibernate.resultado(Mapear_Hibernate.java:477)
+	at com.bieitosousa.ad05.Hibernate.Mapear_Hibernate.start(Mapear_Hibernate.java:103)
+	at com.bieitosousa.ad05.Hibernate.Mapear_Hibernate.main(Mapear_Hibernate.java:77)
+Command execution failed.
+org.apache.commons.exec.ExecuteException: Process exited with an error: 1 (Exit value: 1)
+	at org.apache.commons.exec.DefaultExecutor.executeInternal(DefaultExecutor.java:404)
+	at org.apache.commons.exec.DefaultExecutor.execute(DefaultExecutor.java:166)
+	at org.codehaus.mojo.exec.ExecMojo.executeCommandLine(ExecMojo.java:764)
+	at org.codehaus.mojo.exec.ExecMojo.executeCommandLine(ExecMojo.java:711)
+	at org.codehaus.mojo.exec.ExecMojo.execute(ExecMojo.java:289)
+	at org.apache.maven.plugin.DefaultBuildPluginManager.executeMojo(DefaultBuildPluginManager.java:134)
+	at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:207)
+	at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:153)
+	at org.apache.maven.lifecycle.internal.MojoExecutor.execute(MojoExecutor.java:145)
+	at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject(LifecycleModuleBuilder.java:116)
+	at org.apache.maven.lifecycle.internal.LifecycleModuleBuilder.buildProject(LifecycleModuleBuilder.java:80)
+	at org.apache.maven.lifecycle.internal.builder.singlethreaded.SingleThreadedBuilder.build(SingleThreadedBuilder.java:51)
+	at org.apache.maven.lifecycle.internal.LifecycleStarter.execute(LifecycleStarter.java:128)
+	at org.apache.maven.DefaultMaven.doExecute(DefaultMaven.java:307)
+	at org.apache.maven.DefaultMaven.doExecute(DefaultMaven.java:193)
+	at org.apache.maven.DefaultMaven.execute(DefaultMaven.java:106)
+	at org.apache.maven.cli.MavenCli.execute(MavenCli.java:863)
+	at org.apache.maven.cli.MavenCli.doMain(MavenCli.java:288)
+	at org.apache.maven.cli.MavenCli.main(MavenCli.java:199)
+	at sun.reflect.NativeMethodAccessorImpl.invoke0(Native Method)
+	at sun.reflect.NativeMethodAccessorImpl.invoke(NativeMethodAccessorImpl.java:62)
+	at sun.reflect.DelegatingMethodAccessorImpl.invoke(DelegatingMethodAccessorImpl.java:43)
+	at java.lang.reflect.Method.invoke(Method.java:498)
+	at org.codehaus.plexus.classworlds.launcher.Launcher.launchEnhanced(Launcher.java:289)
+	at org.codehaus.plexus.classworlds.launcher.Launcher.launch(Launcher.java:229)
+	at org.codehaus.plexus.classworlds.launcher.Launcher.mainWithExitCode(Launcher.java:415)
+	at org.codehaus.plexus.classworlds.launcher.Launcher.main(Launcher.java:356)
+------------------------------------------------------------------------
+BUILD FAILURE
+------------------------------------------------------------------------
+Total time: 3.255 s
+Finished at: 2020-04-15T01:06:30+02:00
+Final Memory: 10M/309M
+------------------------------------------------------------------------
+Failed to execute goal org.codehaus.mojo:exec-maven-plugin:1.5.0:exec (default-cli) on project AD05: Command execution failed. Process exited with an error: 1 (Exit value: 1) -> [Help 1]
+
+To see the full stack trace of the errors, re-run Maven with the -e switch.
+Re-run Maven using the -X switch to enable full debug logging.
+
+For more information about the errors and possible solutions, please read the following articles:
+[Help 1] http://cwiki.apache.org/confluence/display/MAVEN/MojoExecutionException

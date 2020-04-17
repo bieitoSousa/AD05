@@ -1,0 +1,25 @@
+public static Userinfo getUserinfo()
+{
+    String result1 = http.POST("https://www.bitstamp.net/api/balance/",
+                                postdata, true);
+    String result2 = "{\"btc_reserved\": \"0\", \"fee\": \"0.5000\", \"btc_available\": \"0.10000000\", \"usd_reserved\": \"0\", \"btc_balance\": \"0.10000000\", \"usd_balance\": \"30.00\", \"usd_available\": \"30.00\"}";
+    Gson gson = new Gson();
+    Userinfo userinfo1 = gson.fromJson(result1, Userinfo.class); //throws Exception
+    Userinfo userinfo2 = gson.fromJson(result2, Userinfo.class); //works fine
+
+    return userinfo1;
+}
+private class Userinfo {
+
+    public Userinfo(){
+    }
+
+    public float usd_balance;
+    public float btc_balance ;
+    public float usd_reserved;
+    public float btc_reserved;
+    public float usd_available;
+    public float btc_available;
+    public float fee;
+    public float last_update;
+}
