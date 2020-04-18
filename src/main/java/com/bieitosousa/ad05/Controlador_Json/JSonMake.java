@@ -111,22 +111,22 @@ public class JSonMake {
         return objaux;
     }
 
-    public static void main(String[] arg) {
-       System.out.println(" ------- CONEXION --------------");
-        System.out.println(getDbConnection().getName());
-        System.out.println(getDbConnection().getAddress());
-        System.out.println(getDbConnection().getPort());
-        System.out.println(getDbConnection().getPassword());;
-        System.out.println(getDbConnection().getUser());
-       System.out.println(" ------- HIBERNATE --------------");  
-        System.out.println(getHibernate().getDialect());
-        System.out.println(getHibernate().getDriver());
-        System.out.println(getHibernate().getHBM2DDL_AUTO());
-        System.out.println(getHibernate().getSHOW_SQL());
-       System.out.println(" ------- APP --------------");  
-        System.out.println(getApp().getDirectory());
-
-    }
+//    public static void main(String[] arg) {
+//       System.out.println(" ------- CONEXION --------------");
+//        System.out.println(getDbConnection().getName());
+//        System.out.println(getDbConnection().getAddress());
+//        System.out.println(getDbConnection().getPort());
+//        System.out.println(getDbConnection().getPassword());;
+//        System.out.println(getDbConnection().getUser());
+//       System.out.println(" ------- HIBERNATE --------------");  
+//        System.out.println(getHibernate().getDialect());
+//        System.out.println(getHibernate().getDriver());
+//        System.out.println(getHibernate().getHBM2DDL_AUTO());
+//        System.out.println(getHibernate().getSHOW_SQL());
+//       System.out.println(" ------- APP --------------");  
+//        System.out.println(getApp().getDirectory());
+//
+//    }
     
     public static class ConfigDB {
 

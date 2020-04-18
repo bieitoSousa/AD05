@@ -1,0 +1,3 @@
+path = path.replace("${file.path}", realValue);
+//or even
+path = path.replace(variable, realValue);

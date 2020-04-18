@@ -29,9 +29,11 @@ import com.bieitosousa.ad05.Controlador_Notificaciones.*;
 import com.bieitosousa.ad05.Controlador_DB.*;
 import com.bieitosousa.ad05.Modelos.*;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.io.PrintStream;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -63,9 +65,11 @@ public class Mapear_Hibernate {
 //  *   this.directorio --> Referenciar lista de objetos DT
 //  *   DT --> Referenciar los registros de la DT    
 //      
-
+    PrintStream originalPrintStream = System.out;
+    private static File fileLog = null;
+    private static PrintStream stream = null;
     private HibernateUtil h = HibernateUtil.getInstance();
-    private  String ruta = JSonMake.getApp().getDirectory();
+    private String ruta = JSonMake.getApp().getDirectory();
     private File raiz = new File(ruta);
     private List<String> archNew = new ArrayList<>();
     private List<String> archUpdate = new ArrayList<>();
@@ -138,17 +142,81 @@ public class Mapear_Hibernate {
     private String cDessMapeado = "   =   [DESPUES]  [MAPEADO]   = ";
     private String cResMapeado = "   =   [RESULTADO]  [MAPEADO]   = ";
 
+//  ======================================================================
+//    =    Constructores  =
+//  ======================================================================
+//
     public Mapear_Hibernate() {
-        this.cont++;
+       Mapear_Hibernate.cont++;
+       addFileLog();
+
     }
+
     public Mapear_Hibernate(String ruta) {
         this.cont++;
-        this.ruta=ruta;
+        this.ruta = ruta;
+        addFileLog();
     }
-    public static void main(String[] args) throws Exception {
-        Mapear_Hibernate m = new Mapear_Hibernate();
-        m.start();
+
+//  ======================================================================
+//    =    OPERACIONES   Crear  Archivo  =  {notificaciones.log}  =
+//  ======================================================================
+//
+//  *   |-->    addFileLog    
+//        [ Cambia System.out a una salida en el archivo notificaciones.log ]
+//  *   |-->    getCreateFileLog    
+//        [ Crea si no existe el archivo notificaciones.log ]
+//  *   |-->   CreateSteamLog() {
+//        [Crea el PrintStream que se le pasara a System.out  ]
+//        
+     private void addFileLog() {
+        CreateSteamLog();
+        System.setOut(stream);
     }
+
+    private File getCreateFileLog() {
+        if (fileLog == null) {
+            Mapear_Hibernate.fileLog = new File("mapear.log");
+            try {
+                fileLog.createNewFile();
+
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Mapear_Hibernate.class.getName())
+                        .log(Level.SEVERE, null, ex);
+                return null;
+            } catch (IOException ex) {
+                Logger.getLogger(Mapear_Hibernate.class.getName())
+                        .log(Level.SEVERE, null, ex);
+                return null;
+            }
+        }
+        return fileLog;
+    }
+
+    private PrintStream CreateSteamLog() {
+        if (stream == null) {
+            try {
+               Mapear_Hibernate.fileLog=getCreateFileLog();
+                System.setOut(originalPrintStream);
+               System.out.println(
+                       "MAPEADO >>> salida redirigiada a archivo ["
+                               +fileLog.getPath()+"]");
+                Mapear_Hibernate.stream = 
+                        new PrintStream(Mapear_Hibernate.fileLog);
+                
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(Mapear_Hibernate.class.getName())
+                        .log(Level.SEVERE, null, ex);
+                return null;
+            }
+        }
+        return Mapear_Hibernate.stream;
+
+    }
+//    public static void main(String[] args) throws Exception {
+//        Mapear_Hibernate m = new Mapear_Hibernate();
+//        m.start();
+//    }
 
 //  ======================================================================
 //    =    OPERACIONES    {ANTES}  DE MAPEADO =   DIRECTORIO  =   DB  =
@@ -168,11 +236,14 @@ public class Mapear_Hibernate {
         if (createDirectory()) {
             System.out.println(cabecera + cPreMapeado
                     + "  Extrallendo datos de la DB ");
-            if (cargarRegistrosDB() || directorio.size() == 0 || archivo.size() == 0) {
-                if (rebootState() || directorio.size() == 0 || archivo.size() == 0) {
+            if (cargarRegistrosDB() || directorio.size() == 0 
+                    || archivo.size() == 0) {
+                if (rebootState() || directorio.size() == 0 
+                        || archivo.size() == 0) {
                     viewDBDirectories();
                     System.out.println(cabecera + cPreMapeado
-                            + "  Preparando DIRECTORIO [" + ruta + "] para su analisis [OK]");
+                            + "  Preparando DIRECTORIO [" + ruta 
+                            + "] para su analisis [OK]");
                     System.out.println(rMapeado);
                     //Mapeamos
                     mappDirectory(raiz);
@@ -201,14 +272,13 @@ public class Mapear_Hibernate {
 //    =    OPERACIONES    {ANTES}  DE MAPEADO =   DIRECTORIO  =   DB  =
 //  ======================================================================
 //
-//  *   [H]|    -->    driver.createTabletMyFile() {Lo hace HIbernate}    
-//        [Filtramos , Creamos las tablas en la DT]
 //  *   [2]|-->    createDirectory     
 //        [Filtramos , Creamos el directorio desde donde vamos a mapear]
-//  *   [3]|-->    getDirectorio   
-//  *     [ Cargamos los datos de la DB en --> this.directirio]
+//  *   [3]|-->    cargarRegistrosDB   
+//  *     [ Cargamos los datos de la DB en --> this.directirio --> this.archivo]
 //  *   [4]|-->    rebootState   
-//  *     [ reiniciamos el estado:: en this.Directorio ponemos {state = 0}] 
+//  *     [ reiniciamos el estado:: en this.Directorio ponemos {state = 0} 
+//                                  --> this.archivo ponemos {state = 0} ] 
 //  *   [5]|-->    viewDBDirectories   
 //  *    [ Muestra por pantalla los registros de la DB]
 //
@@ -272,7 +342,7 @@ public class Mapear_Hibernate {
         }
         System.out.println(cabecera + cPreMapeado
                 + "          =   =   =   =   =   =   "
-                + "     =   [FIN]   [ANALISIS]    [REGISTROS]      [DB]   =   ");
+                + "    =   [FIN]   [ANALISIS]    [REGISTROS]      [DB]   =   ");
     }
 //  ======================================================================
 //    =    OPERACIONES    DE MAPEADO =   DIRECTORIO  =   DB  =
@@ -280,8 +350,9 @@ public class Mapear_Hibernate {
 //
 //  *   [6]|-->    mappDirectory   
 //        [Mapea el directorio]
-//  *   [6.1]|-->    saveFile     
-//        [ Establece el estado {Archivo} -->Compara < Directorio Vs DB >]
+//  *   [6.1]|-->    saveFile     saveDirectori
+//          [ Establece el estado{Archivo}{Directorio} 
+//          |-->Compara < Directorio Vs DB >]
 //  *   [6.1.2]|-->    isDirectoryContainsKey   
 //  *     [ Compara {DB (url) Directorio(url)} (==)tru (!=)false ]
 //  *   [6.1.3]|-->    getDBMyFile   
@@ -315,18 +386,20 @@ public class Mapear_Hibernate {
                     }
                 } else {
                     System.err.print(cabecera
-                            + "El fichero no existe [" + fichero.getPath() + "]");
+                            + "El fichero no existe [" + fichero.getPath() 
+                            + "]");
                 }
             }
         } else {
             System.err.println(cabecera
-                    + "No se a podido crear el directorio [" + fraiz.getPath() + "]");
+                    + "No se a podido crear el directorio [" + fraiz.getPath() 
+                    + "]");
         }
     }
 
-//  ====================================================
-//    =    OPERACIONES    DE MAPEADO =  {saveFile}
-//  ====================================================
+//  ===========================================================================
+//    =    OPERACIONES    DE MAPEADO =  {saveFile} {saveDirectori}
+//  ===========================================================================
 //  (i) Inicialmente el Estado se reinicia >> Estado[0]
 //      Analiza el fichero
 //       1. DB (NO) Directorio(SI) --> lo crea de nuevo >>Estado [3]
@@ -403,10 +476,11 @@ public class Mapear_Hibernate {
                     System.out.print(" Estado [Nuevo] \n");
                     return true;
                 }
-                // Los archivos que no se trataron en this.directorio>>Estado [0] 
+                //Los archivos que no se trataron en this.directorio>>Estado [0] 
             } else {
                 System.err.println(cabecera
-                        + "No se a podido crear el archivo [" + f.getPath() + "]");
+                        + "No se a podido crear el archivo [" + f.getPath() 
+                        + "]");
                 return false;
             }
         } else {
@@ -430,7 +504,8 @@ public class Mapear_Hibernate {
                         return readDictori;
                     } else {
                         System.err.print(cabecera + cMapeado
-                                + "[ERROR] = = {DIRECTORIO} = =  [" + f.getPath()
+                                + "[ERROR] = = {DIRECTORIO} = =  [" 
+                                + f.getPath()
                                 + "[ERROR] [Sin Cambios] ");
                         return null;
                     }
@@ -441,7 +516,8 @@ public class Mapear_Hibernate {
                         System.out.print(" DB [NEW] ");
                     } else {
                         System.err.print(cabecera + cMapeado
-                                + "[ERROR] = = {DIRECTORIO} = =  [" + f.getPath()
+                                + "[ERROR] = = {DIRECTORIO} = =  [" 
+                                + f.getPath()
                                 + "[DB] [ERROR] [NEW] ");
                         return null;
                     }
@@ -449,7 +525,8 @@ public class Mapear_Hibernate {
                         System.out.print(" DIR [NEW] ");
                     } else {
                         System.err.print(cabecera + cMapeado
-                                + "[ERROR] = = {DIRECTORIO} = =  [" + f.getPath()
+                                + "[ERROR] = = {DIRECTORIO} = =  [" 
+                                + f.getPath()
                                 + "[DIR] [ERROR] [NEW] ");
                         return null;
                     }
@@ -458,12 +535,14 @@ public class Mapear_Hibernate {
                 }
             } else {
                 System.err.println(cabecera
-                        + "No se a podido crear el archivo [" + f.getPath() + "]");
+                        + "No se a podido crear el archivo [" 
+                        + f.getPath() + "]");
                 return null;
             }
         } else {
             System.err.println(cabecera
-                    + "No se a podido crear el archivo [" + f.getPath() + "]");
+                    + "No se a podido crear el archivo [" 
+                    + f.getPath() + "]");
             return null;
         }
     }
@@ -532,14 +611,16 @@ public class Mapear_Hibernate {
     public void createDeleteFile(File f) {
         if (f.isFile()) {
             // si el archivo no existe
-            MyFile_Hibernate mf = new MyFile_Hibernate(f, new MyDirectori_Hibernate(f.getParentFile()));
+            MyFile_Hibernate mf = new MyFile_Hibernate(f, 
+                    new MyDirectori_Hibernate(f.getParentFile()));
             try {
                 File fnFile = new File(mf.getUrl());
                 if (fnFile.getParentFile().mkdirs()) {
                     System.out.println(cabecera
                             + " Creando Directorio ...."
                             + fnFile.getParentFile().getPath());
-                    updateThisDirectori(new MyDirectori_Hibernate(fnFile.getParentFile()), 4);
+                    updateThisDirectori(new MyDirectori_Hibernate(
+                            fnFile.getParentFile()), 4);
                 } else {
 //                            System.out.println(this.cabecera
 //                                    + " [NO] se ha Creando Directorio"
@@ -547,7 +628,9 @@ public class Mapear_Hibernate {
 //                             updateThisDirectori(new MyDirectori_Hibernate(fnFile.getParentFile()),-1);
                 }
                 if (fnFile.createNewFile()) {
-                    updateThisArchivo(new MyFile_Hibernate(fnFile, new MyDirectori_Hibernate(fnFile.getParentFile())), 4);
+                    updateThisArchivo(new MyFile_Hibernate(fnFile,
+                            new MyDirectori_Hibernate(fnFile.getParentFile()))
+                            , 4);
                     System.out.println(this.cabecera
                             + " Creando Archivo ...... "
                             + fnFile.getPath());
@@ -555,7 +638,9 @@ public class Mapear_Hibernate {
                     System.out.println(this.cabecera
                             + "[NO] se ha Creando Archivo ...."
                             + ".. " + fnFile.getPath());
-                    updateThisArchivo(new MyFile_Hibernate(fnFile, new MyDirectori_Hibernate(fnFile.getParentFile())), -1);
+                    updateThisArchivo(new MyFile_Hibernate(fnFile, 
+                            new MyDirectori_Hibernate(fnFile.getParentFile()))
+                            , -1);
                 }
 
             } catch (IOException ex) {
@@ -572,71 +657,67 @@ public class Mapear_Hibernate {
                     System.out.println(this.cabecera + cDessMapeado
                             + " Creando Directorio ...."
                             + fnFile.getParentFile().getPath());
-                    updateThisDirectori(new MyDirectori_Hibernate(fnFile.getParentFile()), 4);
-                } else {
-//                            System.out.println(this.cabecera
-//                                    + " [NO] se ha Creando Directorio"
-//                                    + "..." + fnFile.getParentFile().getPath());
-//                             updateThisDirectori(new MyDirectori_Hibernate(fnFile.getParentFile()),-1);
+                    updateThisDirectori(new MyDirectori_Hibernate(
+                            fnFile.getParentFile()), 4);
+                } else {                      
                 }
 
             }
         }
     }
+
     public void createDeleteFile(MyFile_Hibernate mf) {
-      
-            // si el archivo no existe
-            
-            try {
-                File fnFile = new File(mf.getUrl());
-                if (fnFile.getParentFile().mkdirs()) {
-                    System.out.println(cabecera
-                            + " Creando Directorio ...."
-                            + fnFile.getParentFile().getPath());
-                    updateThisDirectori(new MyDirectori_Hibernate(fnFile.getParentFile()), 4);
-                } else {
-//                            System.out.println(this.cabecera
-//                                    + " [NO] se ha Creando Directorio"
-//                                    + "..." + fnFile.getParentFile().getPath());
-//                             updateThisDirectori(new MyDirectori_Hibernate(fnFile.getParentFile()),-1);
-                }
-                if (fnFile.createNewFile()) {
-                    updateThisArchivo(new MyFile_Hibernate(fnFile, new MyDirectori_Hibernate(fnFile.getParentFile())), 4);
-                    System.out.println(this.cabecera
-                            + " Creando Archivo ...... "
-                            + fnFile.getPath());
-                } else {
-                    System.out.println(this.cabecera
-                            + "[NO] se ha Creando Archivo ...."
-                            + ".. " + fnFile.getPath());
-                    updateThisArchivo(new MyFile_Hibernate(fnFile, new MyDirectori_Hibernate(fnFile.getParentFile())), -1);
-                }
 
-            } catch (IOException ex) {
-                Logger.getLogger(Mapear_Hibernate.class.getName()).log(
-                        Level.SEVERE, null, ex);
+        // si el archivo no existe
+        try {
+            File fnFile = new File(mf.getUrl());
+            if (fnFile.getParentFile().mkdirs()) {
+                System.out.println(cabecera
+                        + " Creando Directorio ...."
+                        + fnFile.getParentFile().getPath());
+                updateThisDirectori(new MyDirectori_Hibernate(
+                        fnFile.getParentFile()), 4);
+            } else {
+                         }
+            if (fnFile.createNewFile()) {
+                updateThisArchivo(new MyFile_Hibernate(fnFile,
+                        new MyDirectori_Hibernate(fnFile.getParentFile())), 4);
+                System.out.println(this.cabecera
+                        + " Creando Archivo ...... "
+                        + fnFile.getPath());
+            } else {
+                System.out.println(this.cabecera
+                        + "[NO] se ha Creando Archivo ...."
+                        + ".. " + fnFile.getPath());
+                updateThisArchivo(new MyFile_Hibernate(fnFile,
+                        new MyDirectori_Hibernate(fnFile.getParentFile())), -1);
             }
-            mf.pasteData();
-        }
-        
-           public void createDeleteFile(MyDirectori_Hibernate md) {
 
-                File fnFile = new File(md.getUrl());
-                if (fnFile.mkdirs()) {
-                    System.out.println(this.cabecera + cDessMapeado
-                            + " Creando Directorio ...."
-                            + fnFile.getParentFile().getPath());
-                    updateThisDirectori(new MyDirectori_Hibernate(fnFile.getParentFile()), 4);
-                } else {
+        } catch (IOException ex) {
+            Logger.getLogger(Mapear_Hibernate.class.getName()).log(
+                    Level.SEVERE, null, ex);
+        }
+        mf.pasteData();
+    }
+
+    public void createDeleteFile(MyDirectori_Hibernate md) {
+
+        File fnFile = new File(md.getUrl());
+        if (fnFile.mkdirs()) {
+            System.out.println(this.cabecera + cDessMapeado
+                    + " Creando Directorio ...."
+                    + fnFile.getParentFile().getPath());
+            updateThisDirectori(
+                    new MyDirectori_Hibernate(fnFile.getParentFile()), 4);
+        } else {
 //                            System.out.println(this.cabecera
 //                                    + " [NO] se ha Creando Directorio"
 //                                    + "..." + fnFile.getParentFile().getPath());
 //                             updateThisDirectori(new MyDirectori_Hibernate(fnFile.getParentFile()),-1);
-                }
-
-            
         }
-    
+
+    }
+
     private void createDeleteFile() {
         boolean arch = false;
         if (archivo.size() > 0) {
@@ -649,7 +730,8 @@ public class Mapear_Hibernate {
                             System.out.println(cabecera
                                     + " Creando Directorio ...."
                                     + fnFile.getParentFile().getPath());
-                            updateThisDirectori(new MyDirectori_Hibernate(fnFile.getParentFile()), 4);
+                            updateThisDirectori(new MyDirectori_Hibernate(
+                                    fnFile.getParentFile()), 4);
                         } else {
 //                            System.out.println(this.cabecera
 //                                    + " [NO] se ha Creando Directorio"
@@ -657,7 +739,9 @@ public class Mapear_Hibernate {
 //                             updateThisDirectori(new MyDirectori_Hibernate(fnFile.getParentFile()),-1);
                         }
                         if (fnFile.createNewFile()) {
-                            updateThisArchivo(new MyFile_Hibernate(fnFile, new MyDirectori_Hibernate(fnFile.getParentFile())), 4);
+                            updateThisArchivo(new MyFile_Hibernate(fnFile,
+                                    new MyDirectori_Hibernate(
+                                            fnFile.getParentFile())), 4);
                             System.out.println(this.cabecera
                                     + " Creando Archivo ...... "
                                     + fnFile.getPath());
@@ -665,7 +749,9 @@ public class Mapear_Hibernate {
                             System.out.println(this.cabecera
                                     + "[NO] se ha Creando Archivo ...."
                                     + ".. " + fnFile.getPath());
-                            updateThisArchivo(new MyFile_Hibernate(fnFile, new MyDirectori_Hibernate(fnFile.getParentFile())), -1);
+                            updateThisArchivo(new MyFile_Hibernate(
+                                    fnFile, new MyDirectori_Hibernate(
+                                            fnFile.getParentFile())), -1);
                         }
 
                     } catch (IOException ex) {
@@ -685,13 +771,10 @@ public class Mapear_Hibernate {
                         System.out.println(this.cabecera + cDessMapeado
                                 + " Creando Directorio ...."
                                 + fnFile.getParentFile().getPath());
-                        updateThisDirectori(new MyDirectori_Hibernate(fnFile.getParentFile()), 4);
+                        updateThisDirectori(new MyDirectori_Hibernate(
+                                fnFile.getParentFile()), 4);
                     } else {
-//                            System.out.println(this.cabecera
-//                                    + " [NO] se ha Creando Directorio"
-//                                    + "..." + fnFile.getParentFile().getPath());
-//                             updateThisDirectori(new MyDirectori_Hibernate(fnFile.getParentFile()),-1);
-                    }
+                }
 
                 }
             }
@@ -841,7 +924,8 @@ public class Mapear_Hibernate {
     private boolean cargarDirectorio() {
         directorio.clear();
         List<MyDirectori_Hibernate> listMyDirectori_Hibernate
-                = h.get("from MyDirectori_Hibernate", MyDirectori_Hibernate.class);
+                = h.get("from MyDirectori_Hibernate",
+                        MyDirectori_Hibernate.class);
         if (listMyDirectori_Hibernate.size() > 0) {
             for (MyDirectori_Hibernate md : listMyDirectori_Hibernate) {
                 directorio.add(md);
@@ -869,7 +953,8 @@ public class Mapear_Hibernate {
 
     }
 
-    private boolean updateThisDirectori(MyDirectori_Hibernate oldFile, int state) {
+    private boolean updateThisDirectori(MyDirectori_Hibernate oldFile
+            , int state) {
         if (directorio != null) {
             for (MyDirectori_Hibernate mf : this.directorio) {
                 // si el archivo no existe

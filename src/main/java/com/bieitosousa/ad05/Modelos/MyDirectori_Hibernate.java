@@ -23,6 +23,7 @@
  */
 package com.bieitosousa.ad05.Modelos;
 
+import com.bieitosousa.ad05.Controlador_Json.JSonMake;
 import java.io.File;
 import java.io.Serializable;
 import java.util.Objects;
@@ -52,18 +53,32 @@ public class MyDirectori_Hibernate implements Serializable {
     private String url;
     @Transient
     private int state;// [0] {Directorio (No) DB (SI)} [1] Archivo sin Cambios    [2]Archivo Modificado  [3] Archivo Nuevo
-  
-
-  public  MyDirectori_Hibernate(){}
+    @Transient
+    private  String raiz = JSonMake.getApp().getDirectory();
+    public  MyDirectori_Hibernate(){
+    }
 
     public MyDirectori_Hibernate( String name, String url) {
-        this.name = name;
-        this.url = url;
+        this.raiz = JSonMake.getApp().getDirectory();
+        this.name = name.replace(raiz,".");
+        this.url = url.replace(raiz,".");
     }
 
         public MyDirectori_Hibernate( File f) {
-        this.name = f.getName();
-        this.url = f.getPath();;
+        this.raiz = JSonMake.getApp().getDirectory();
+        this.name = f.getName().replace(raiz,".");
+        this.url = f.getPath().replace(raiz,".");
+    }
+    public MyDirectori_Hibernate( String name, String url, String raiz) {
+        this.raiz =  JSonMake.getApp().getDirectory();
+        this.name = name.replace(raiz,".");
+        this.url = url.replace(raiz,".");
+    }
+
+        public MyDirectori_Hibernate( File f, String raiz) {
+        this.raiz = JSonMake.getApp().getDirectory();
+        this.name = f.getName().replace(raiz,".");
+        this.url = f.getPath().replace(raiz,".");
     }
     
     public int getId() {
@@ -75,19 +90,21 @@ public class MyDirectori_Hibernate implements Serializable {
     }
 
     public String getName() {
-        return name;
+        return name.replace(".",raiz);
     }
 
     public void setName(String name) {
-        this.name = name;
+        this.name = name.replace(raiz,".");
     }
 
     public String getUrl() {
-        return url;
+        if (url.contains(".")){
+        return url.replace(".",raiz);
+        }else{return url;}
     }
 
     public void setUrl(String url) {
-        this.url = url;
+        this.url = url.replace(raiz,".");
     }
 
     public int getState() {
@@ -98,6 +115,14 @@ public class MyDirectori_Hibernate implements Serializable {
         this.state = state;
     }
 
+    public String getRaiz() {
+        return raiz;
+    }
+
+    public void setRaiz(String raiz) {
+        this.raiz = raiz;
+    }
+    
     @Override
     public int hashCode() {
         int hash = 5;
@@ -131,5 +156,7 @@ public class MyDirectori_Hibernate implements Serializable {
     public String toString() {
         return "MyDirectori_Hibernate{" + "name=" + name + ", url=" + url + ", state=" + state + '}';
     }
+
+   
 
 }// FIN MyDirectori_Hibernate
